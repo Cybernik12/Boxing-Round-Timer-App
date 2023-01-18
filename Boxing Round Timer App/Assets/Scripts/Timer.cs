@@ -7,46 +7,35 @@ using Mono.Cecil;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField]
-    private TextMeshProUGUI roundsText;
+    [SerializeField] private TextMeshProUGUI roundsText;
+    [SerializeField] private TMP_InputField roundsInput;
 
-    [SerializeField]
-    private TMP_InputField rounds;
+    [SerializeField] private TextMeshProUGUI minutesText;
+    [SerializeField] private TMP_InputField minutesInput;
 
-    [SerializeField]
-    private TextMeshProUGUI minutesText;
+    [SerializeField] private TextMeshProUGUI secondsText;
+    [SerializeField] private TMP_InputField secondsInput;
 
-    [SerializeField]
-    private TMP_InputField minutes;
-
-    [SerializeField]
-    private TextMeshProUGUI restText;
-
-    [SerializeField]
-    private TMP_InputField rest;
-
-    [SerializeField]
-    private TMP_Dropdown dropdownTest;
+    [SerializeField] private TextMeshProUGUI restText;
+    [SerializeField] private TMP_InputField restInput;
 
     private int roundsInt;
     private int minutesInt;
+    [SerializeField]
+    private int secondsInt;
     private int restInt;
 
-    [SerializeField]
     private float timer;
-
-    [SerializeField]
     private int timerInt;
 
-    private float timerRest;
+    private float timerMinutes;
 
+    private float timerSeconds;
+
+    private float timerRest;
     private int timerRestInt;
 
-    private int temp;
-
-    [SerializeField]
-    private int seconds;
-
+    private int rounds;
     private bool start;
 
     private TouchScreenKeyboardType KeyboardType { get; set; }
@@ -54,9 +43,10 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rounds.keyboardType = TouchScreenKeyboardType.NumberPad;
-        minutes.keyboardType = TouchScreenKeyboardType.NumberPad;
-        rest.keyboardType = TouchScreenKeyboardType.NumberPad;
+        roundsInput.keyboardType = TouchScreenKeyboardType.NumberPad;
+        minutesInput.keyboardType = TouchScreenKeyboardType.NumberPad;
+        secondsInput.keyboardType = TouchScreenKeyboardType.NumberPad;
+        restInput.keyboardType = TouchScreenKeyboardType.NumberPad;
 
         start = false;
     }
@@ -65,49 +55,40 @@ public class Timer : MonoBehaviour
     void Update()
     {
 
-        roundsInt = int.Parse(rounds.text);
-        minutesInt = int.Parse(minutes.text);
-        restInt = int.Parse(rest.text);
-         /*
-        roundsText.text = roundsInt.ToString();
-        minutesText.text = minutesInt.ToString();
-        restText.text = restInt.ToString();
-         */
+        roundsInt = int.Parse(roundsInput.text);
+        minutesInt = int.Parse(minutesInput.text);
+        secondsInt = int.Parse(secondsInput.text);
+        restInt = int.Parse(restInput.text);
 
         minutesText.text = timerInt.ToString();
         restText.text = timerRestInt.ToString();
 
-        if (start == true && temp > 0)
+        if (start == true && rounds > 0) // if there are rounds left, start timer
         {
-
-
-            roundsText.text = temp.ToString();
-
+            roundsText.text = rounds.ToString();
             timer -= Time.deltaTime;
-
             timerInt = (int)timer;
 
-            if (timerInt <= 0)
+            if (timerInt <= 0) // if timer is 0, start rest timer
             {
                 timer = 0f;
                 timerInt = 0;
 
                 timerRest -= Time.deltaTime;
-
                 timerRestInt = (int)timerRest;
 
-                if (timerRest <= 0)
+                if (timerRest <= 0) // if rest timer is 0, minus a round
                 {
                     timerRest = 0f;
                     timerRestInt = 0;
 
-                    temp--;
+                    rounds--;
 
+                    // Change
                     timer = minutesInt;
-
                     timerRest = restInt;
 
-                    if (temp <= 0)
+                    if (rounds <= 0) // if rounds is 0, stop
                     {
                         start = false;
                     }
@@ -118,13 +99,12 @@ public class Timer : MonoBehaviour
 
     public void StartTimer()
     {
-        // timer = minutesInt * 60;
-
-        timer = minutesInt;
-
+        rounds = roundsInt;
+        timerMinutes = minutesInt;
+        timerSeconds = secondsInt;
         timerRest = restInt;
 
-        temp = roundsInt;
+        timer = (timerMinutes * 60) + timerSeconds;
 
         start = true;
     }
