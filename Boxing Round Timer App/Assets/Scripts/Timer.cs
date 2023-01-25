@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class Timer : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class Timer : MonoBehaviour
     private int secondsInt;
     private int restInt;
 
-    // VAriables for the Timers
+    // Variables for the Timers
 
     private float timer;
     private int timerInt;
@@ -44,6 +45,9 @@ public class Timer : MonoBehaviour
     private int rounds;
     private bool start;
     private bool restStart;
+
+    private float countDown = 3.0f;
+    private bool countDownEnd;
 
     // Variables for the Audio
 
@@ -63,12 +67,14 @@ public class Timer : MonoBehaviour
 
         start = false;
         restStart = false;
+        countDownEnd = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(restStart);
+        Debug.Log(countDownEnd);
+        Debug.Log(start);
 
         InputToInt();
         DisplayText(); 
@@ -132,6 +138,9 @@ public class Timer : MonoBehaviour
         TimerSet();
 
         start = false;
+        countDownEnd = false;
+
+        countDown = 3.0f;
 
         resetButton.gameObject.SetActive(false);
         startButton.gameObject.SetActive(true);
@@ -158,35 +167,43 @@ public class Timer : MonoBehaviour
     private void IntervalTimer() // The Logic on how the Interval Timer works
     {
         roundsText.text = "Rounds: " + rounds.ToString();
+        
+        countDown -= Time.deltaTime;
 
-        timer -= Time.deltaTime;
-        timerInt = (int)timer;
-
-        if (timerInt <= 0) // if timer is 0, start rest timer
+        if (countDown <= 0)
         {
-            restStart = true;
+            countDown = 0f;
+            countDownEnd = true;
 
-            timer = 0f;
-            timerInt = 0;
+            timer -= Time.deltaTime;
+            timerInt = (int)timer;
 
-            timerRest -= Time.deltaTime;
-            timerRestInt = (int)timerRest;
-
-            if (timerRest <= 0) // if rest timer is 0, minus a round
+            if (timerInt <= 0) // if timer is 0, start rest timer
             {
-                restStart = false;
+                restStart = true;
 
-                timerRest = 0f;
-                timerRestInt = 0;
+                timer = 0f;
+                timerInt = 0;
 
-                rounds--;
+                timerRest -= Time.deltaTime;
+                timerRestInt = (int)timerRest;
 
-                timer = ((timerMinutes * 60) + timerSeconds);
-                timerRest = restInt;
-
-                if (rounds <= 0) // if rounds is 0, stop
+                if (timerRest <= 0) // if rest timer is 0, minus a round
                 {
-                    start = false;
+                    restStart = false;
+
+                    timerRest = 0f;
+                    timerRestInt = 0;
+
+                    rounds--;
+
+                    timer = ((timerMinutes * 60) + timerSeconds);
+                    timerRest = restInt;
+
+                    if (rounds <= 0) // if rounds is 0, stop
+                    {
+                        start = false;
+                    }
                 }
             }
         }
@@ -202,7 +219,7 @@ public class Timer : MonoBehaviour
             }
         }
 
-        if (timer == ((timerMinutes * 60) + timerSeconds) && start == true)
+        if (timerInt == ((timerMinutes * 60) + timerSeconds) - 1 && start == true && countDownEnd == true)
         {
             if (!audioSource.isPlaying)
             {
