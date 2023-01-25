@@ -2089,7 +2089,8 @@ MonoBehaviour:
   startButton: {fileID: 1917915397}
   resetButton: {fileID: 207536198}
   audioSource: {fileID: 2066889050}
-  roundStart: {fileID: 8300000, guid: 6e3110758a7ca15468c9707e813b609d, type: 3}
+  roundStart: {fileID: 8300000, guid: bd8c0749c88bf7745bfc17af47f0dac4, type: 3}
+  roundEnd: {fileID: 8300000, guid: bd8c0749c88bf7745bfc17af47f0dac4, type: 3}
   tenSecondsLeft: {fileID: 8300000, guid: 9da919ce8f5e6c144811b8702de64e5a, type: 3}
 --- !u!4 &946409963
 Transform:

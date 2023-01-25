@@ -210,7 +210,7 @@ public class Timer : MonoBehaviour
             }
         }
 
-        if (timerRest == restInt && restStart == true)
+        if (timerInt == 1 && restStart == false && start == true)
         {
             if (!audioSource.isPlaying)
             {
